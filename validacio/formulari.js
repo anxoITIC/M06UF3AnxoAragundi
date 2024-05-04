@@ -1,96 +1,87 @@
-function validateEmpty(element, errorId) {
-    let errorElement = document.getElementById(errorId);
-    
-    if (element.value.trim() === "") {
-        element.style.borderColor = "red";
-        errorElement.textContent = "Aquest camp és obligatori.";
-    } else {
-        element.style.borderColor = "green";
-        errorElement.textContent = "";
-    }
-}
+let form = document.querySelector('#form');
 
-function validateEmailField(element) {
-    let isValid = validateEmail(element.value);
-    let errorElement = document.getElementById("email-error");
+//inputs html
+let inputs = {nom: document.querySelector('#nom'), 
+            email: document.querySelector('#email'), 
+            password: document.querySelector('#password'), 
+            repeat: document.querySelector('#repeat'), 
+            postal: document.querySelector('#postal')};
 
-    if (isValid) {
-        element.style.borderColor = "green";
-        errorElement.textContent = "";
-    } else {
-        element.style.borderColor = "red";
-        errorElement.textContent = "Format de correu electrònic incorrecte.";
-    }
+let spans = {nom: document.querySelector('#nomMsg'), 
+            email: document.querySelector('#emailMsg'), 
+            password: document.querySelector('#passwordMsg'), 
+            repeat: document.querySelector('#repeatMsg'), 
+            postal: document.querySelector('#postalMsg')};
+
+
+
+//event listener de la contrasenya
+inputs.password.addEventListener("input", function() {
+    regExps.forEach((regExp, index) => { showPasswordMessage(regExp.test(inputs.password.value), index); });
+});
+
+//regular la contrasenya
+let regExps = [/^.{8,}$/, /[A-Z]/, /[a-z]/, /[0-9]/, /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/];
+
+//event listener del nom
+inputs.nom.addEventListener("focusout", function() {
+    if (inputs.nom.value == '') stylesInputSpan(inputs.nom, spans.nom, 'red', false); 
+    else stylesInputSpan(inputs.nom, spans.nom, 'green', true);
+});
+
+//event listener del correu
+inputs.email.addEventListener("focusout", function() {
+    if (!validateEmail(inputs.email.value)) stylesInputSpan(inputs.email, spans.email, 'red', false);
+    else stylesInputSpan(inputs.email, spans.email, 'green', true);
+});
+
+
+inputs.password.addEventListener("focusout", function() {
+    let valid = 0;
+    let lis = document.querySelectorAll('li');
+    lis.forEach(li => { if (li.style.color == 'green') valid++; });    
+    if (valid == 5) stylesInputSpan(inputs.password, spans.password, 'green', true);
+    else stylesInputSpan(inputs.password, spans.password, 'red', false);
+});
+
+inputs.repeat.addEventListener("focusout", function() {
+    if (inputs.repeat.value != inputs.password.value) stylesInputSpan(inputs.repeat, spans.repeat, 'red', false);
+    else stylesInputSpan(inputs.repeat, spans.repeat, 'green', true);
+});
+
+function stylesInputSpan(input, span, color, hidden) {
+    input.style.border = `1px solid ${color}`;
+    span.hidden = hidden; 
 }
 
 function validateEmail(email) {
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+       return true;
+    } else {
+       return false;
+    }
 }
 
-document.getElementById("password").addEventListener("input", function() {
-    validatePassword();
+form.addEventListener("submit", function(e){
+    e.preventDefault();
+    let valid = 0;
+
+    Object.values(inputs).forEach((camp, index) => { if (camp.style.border == '1px solid green') valid++; });
+    if (valid == 5) form.submit();
 });
 
-function validatePassword() {
-    let password = document.getElementById("password").value;
-    let conditions = [
-        /[a-z]/, 
-        /[A-Z]/,
-        /[0-9]/, 
-        /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/ 
-    ];
 
-    let isValid = conditions.every(condition => condition.test(password)) && (password.length >= 8 && password.length <= 15);
-    let errorElement = document.getElementById("password-error");
+//codi postal
+inputs.postal.addEventListener("focusout", function() {
+    if (inputs.postal.value == '') stylesInputSpan(inputs.postal, spans.postal, 'red', false); 
+    else stylesInputSpan(inputs.postal, spans.postal, 'green', true);
+});
+//mostrar les condicions per fer la contrasenya
+function showPasswordMessage(pwdTest, index) {
+    spans.password.hidden = false;
+    let li = document.getElementById(`li_${index}`);
+    if (pwdTest) li.style.color = "green";
+    else li.style.color = "red";
 
-    if (isValid) {
-        document.getElementById("password").style.borderColor = "green";
-        errorElement.textContent = "";
-    } else {
-        document.getElementById("password").style.borderColor = "red";
-        errorElement.textContent = "La contrasenya no compleix els requisits.";
-    }
-}
-
-function validateConfirmPassword() {
-    let password = document.getElementById("password").value;
-    let confirmPassword = document.getElementById("confirm-password");
-    let errorElement = document.getElementById("confirm-password-error");
-
-    if (confirmPassword.value === password) {
-        confirmPassword.style.borderColor = "green";
-        errorElement.textContent = "";
-    } else {
-        confirmPassword.style.borderColor = "red";
-        errorElement.textContent = "Les contrasenyes no coincideixen.";
-    }
-}
-
-function validateForm() {
-    let form = document.forms["myForm"];
-    let isFormValid = true;
-
-    if (!validateNotEmpty("nombre", "nombre-error")) {
-        isFormValid = false;
-    }
-
-    if (!validateNotEmpty("direccion", "direccion-error")) {
-        isFormValid = false;
-    }
-    return isFormValid;
-}
-
-function validateNotEmpty(elementId, errorId) {
-    let element = document.getElementById(elementId);
-    let errorElement = document.getElementById(errorId);
-    
-    if (element.value.trim() === "") {
-        element.style.borderColor = "red";
-        errorElement.textContent = "Aquest camp és obligatori.";
-        return false;
-    } else {
-        element.style.borderColor = "green";
-        errorElement.textContent = "";
-        return true;
-    }
+    return pwdTest;
 }

@@ -1,78 +1,53 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="formulari.js" defer></script>
-    <title>Formulario de Registro</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 0px;
-;
-        }
-
-        button {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            float: right; /* Alinea el botón a la derecha */
-        }
-
-        .error-message {
-            color: red;
-        }
-
-        button:hover {
-            background-color: #353434;
-        }
-    </style>
+    <title>Validació del Registre</title>
 </head>
 <body>
+    <form id="form">
+        <div>
+            <label for="">Nom:<br>
+                <input type="text" id="nom" name="nom"><br>
+                <span hidden id="nomMsg">Error: El camp no pot estar buit</span>
+            </label><br>
+            
+            <label for="lname">Correu:<br>
+                <input type="text" id="email" name="email"><br>
+                <span hidden id="emailMsg">Error: Correu invàlid</span>
+            </label><br> 
+            
+            <label for="fname">Contrasenya:<br>
+                <input type="text" id="password" name="password"><br>
+                <ul id="passwordMsg" hidden>
+                    <li id="li_0">8 caràcters com a mínim</li>
+                    <li id="li_1">1 lletra majúscula</li>
+                    <li id="li_2">1 lletra minúscula</li>
+                    <li id="li_3">1 número</li>
+                    <li id="li_4">1 caràcter especial</li>
+                </ul>
+            </label><br>
+                
+            <label for="lname">Repetir Contrasenya:<br>
+                <input type="text" id="repeat" name="repeat"><br>
+                <span hidden id="repeatMsg">Error: Les contrasenyes no son iguals</span>
+            </label><br>
+                
+            <label for="lname">Codi Postal:<br>
+                <input type="text" id="postal" name="postal"><br>
+                <span hidden id="postalMsg">Error: El camp no pot estar buit</span>
+            </label><br>
 
-    <form action="#" method="post" onsubmit="return validateForm()">
-        <label for="nombre">Nom:</label>
-        <input type="text" id="nombre" name="nombre" required onfocusout="validateEmpty(this)">
-
-        <label for="email">Correu Electrònic:</label>
-        <input type="email" id="email" name="email" required onfocusout="validateEmailField(this)">
-
-        <label for="password">Contrasenya:</label>
-        <input type="password" id="password" name="password" required oninput="validatePassword(this)">
-
-        <label for="confirm-password">Confirmar Contrasenya:</label>
-        <input type="password" id="confirm-password" name="confirm-password" required onfocusout="validateConfirmPassword()">
-
-        <label for="direccion">Direcció Postal:</label>
-        <input type="text" id="direccion" name="direccion" required onfocusout="validateEmpty(this)">
-
-        <button type="submit">Registrar-se</button>
-
+            <br><input type="submit" value="Submit"><br>
+        </div>
     </form>
 
+    <script src="/formulari.js"></script>
+    <style>
+        span, li{
+            color: red;
+        }
+    </style>
 </body>
 </html>
